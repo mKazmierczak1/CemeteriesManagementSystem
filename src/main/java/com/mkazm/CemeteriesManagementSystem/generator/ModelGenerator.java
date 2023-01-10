@@ -1,10 +1,10 @@
-package com.mkazm.CemeteriesManagementSystem;
+package com.mkazm.CemeteriesManagementSystem.generator;
 
 import com.github.javafaker.Faker;
 import com.mkazm.CemeteriesManagementSystem.model.*;
 import java.util.List;
 
-public class ModelFaker {
+public class ModelGenerator {
 
   private final Faker faker;
 
@@ -14,7 +14,8 @@ public class ModelFaker {
   private static final List<String> tombstone_type_names =
       List.of("Upright", "Slant", "Flat", "Bevel", "Bench", "Wing");
 
-  private static final List<String> user_type_names = List.of("logged", "admin", "manager", "employee");
+  private static final List<String> user_type_names =
+      List.of("logged", "admin", "manager", "employee");
 
   private static final List<String> cemetery_names =
       List.of(
@@ -42,7 +43,7 @@ public class ModelFaker {
           "Request of a attorney",
           "Public health reasons");
 
-  public ModelFaker() {
+  public ModelGenerator() {
     faker = new Faker();
   }
 
