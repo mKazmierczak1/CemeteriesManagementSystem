@@ -6,6 +6,6 @@ public record User(
     String last_name,
     String city,
     String street,
-    int number,
+    String number,
     String email,
     String phone_number) {}
