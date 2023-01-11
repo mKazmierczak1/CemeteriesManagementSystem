@@ -1,3 +1,26 @@
 package com.mkazm.CemeteriesManagementSystem.model;
 
-public record Cemetery(long id, String name, String city, String street, String number) {}
+import java.util.List;
+import org.springframework.data.neo4j.core.schema.Id;
+import org.springframework.data.neo4j.core.schema.Node;
+import org.springframework.data.neo4j.core.schema.Relationship;
+
+@Node("Cemetery")
+public record Cemetery(
+    @Id long id,
+    String name,
+    String city,
+    String street,
+    String number,
+    @Relationship(type = "BELONGS_TO", direction = Relationship.Direction.INCOMING)
+        List<Sector> sectors,
+    @Relationship(type = "MANAGES", direction = Relationship.Direction.INCOMING) Manager manager) {
+
+  public Sector getSector(int index) {
+    return sectors.get(index);
+  }
+
+  public int getSectorsSize() {
+    return sectors.size();
+  }
+}

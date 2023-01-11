@@ -1,3 +1,7 @@
 package com.mkazm.CemeteriesManagementSystem.model;
 
-public record Tombstone(long id, TombstoneType type) {}
+import org.springframework.data.neo4j.core.schema.Id;
+import org.springframework.data.neo4j.core.schema.Node;
+
+@Node("Tombstone")
+public record Tombstone(@Id long id) {}

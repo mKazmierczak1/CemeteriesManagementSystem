@@ -1,9 +1,13 @@
 package com.mkazm.CemeteriesManagementSystem.model;
 
+import org.springframework.data.neo4j.core.schema.Id;
+import org.springframework.data.neo4j.core.schema.Node;
+
 import java.time.Instant;
 
+@Node("Deceased")
 public record Deceased(
-    long id,
+    @Id long id,
     String first_name,
     String last_name,
     String pesel,

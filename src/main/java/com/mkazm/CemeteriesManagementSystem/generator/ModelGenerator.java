@@ -2,11 +2,25 @@ package com.mkazm.CemeteriesManagementSystem.generator;
 
 import com.github.javafaker.Faker;
 import com.mkazm.CemeteriesManagementSystem.model.*;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
+import java.util.stream.IntStream;
 
 public class ModelGenerator {
 
   private final Faker faker;
+
+  private static final int maxBurialBatchCount = 400;
+  private static final int maxCemeteryBatchCount = 1;
+  private static final int maxDeceasedBatchCount = 1000;
+  private static final int maxExhumationBatchCount = 100;
+  private static final int MAX_PLOTS_IN_SECTOR = 50;
+  private static final int MAX_PLOTS_FOR_RESERVATION = 5;
+  private static final int maxReservationBatchCount = 800;
+  private static final int MAX_SECTORS_IN_CEMETERY = 10;
+  private static final int maxTombstoneBatchCount = 800;
+  private static final int maxUserBatchCount = 200;
 
   private static final List<String> grave_type_names =
       List.of("single", "double", "child", "family", "mass");
@@ -62,7 +76,9 @@ public class ModelGenerator {
         cemetery_names.get(faker.random().nextInt(cemetery_names.size())),
         faker.address().city(),
         faker.address().streetName(),
-        faker.address().buildingNumber());
+        faker.address().buildingNumber(),
+        generateEntities(faker.random().nextInt(MAX_SECTORS_IN_CEMETERY), this::generateSector),
+        new Manager(generateUser()));
   }
 
   public Deceased generateDeceased() {
@@ -113,18 +129,20 @@ public class ModelGenerator {
         faker.date().birthday().toInstant(),
         faker.address().city(),
         faker.address().streetName(),
-        faker.address().buildingNumber());
+        faker.address().buildingNumber(),
+        generateEntities(MAX_PLOTS_FOR_RESERVATION, this::generatePlot));
   }
 
   public Sector generateSector() {
-    return new Sector(faker.random().nextLong(), faker.letterify("?"));
+    return new Sector(
+        faker.random().nextLong(),
+        faker.letterify("?"),
+        generateEntities(faker.random().nextInt(MAX_PLOTS_IN_SECTOR), this::generatePlot));
   }
 
   public Tombstone generateTombstone() {
     return new Tombstone(
-        faker.random().nextLong(),
-        new TombstoneType(
-            0, tombstone_type_names.get(faker.random().nextInt(tombstone_type_names.size()))));
+        faker.random().nextLong());
   }
 
   public User generateUser() {
@@ -136,6 +154,14 @@ public class ModelGenerator {
         faker.address().streetName(),
         faker.address().buildingNumber(),
         faker.bothify("??????###@mail.com"),
-        faker.phoneNumber().phoneNumber());
+        faker.phoneNumber().phoneNumber(),
+        List.of());
+  }
+
+  public <T> List<T> generateEntities(int numberOfEntities, Supplier<T> generateMethod) {
+    var entities = new ArrayList<T>();
+    IntStream.range(0, numberOfEntities).forEach(i -> entities.add(generateMethod.get()));
+
+    return entities;
   }
 }
