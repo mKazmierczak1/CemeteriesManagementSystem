@@ -1,6 +1,6 @@
-package com.mkazm.CemeteriesManagementSystem.generator;
+package com.mkazm.cemeteriesmanagementsystem.generator;
 
-import com.mkazm.CemeteriesManagementSystem.model.Cemetery;
+import com.mkazm.cemeteriesmanagementsystem.model.Cemetery;
 
 public class QueryGenerator {
 

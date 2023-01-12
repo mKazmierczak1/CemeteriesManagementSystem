@@ -1,4 +1,4 @@
-package com.mkazm.CemeteriesManagementSystem.model;
+package com.mkazm.cemeteriesmanagementsystem.model;
 
 import java.time.Instant;
 import org.springframework.data.neo4j.core.schema.Id;

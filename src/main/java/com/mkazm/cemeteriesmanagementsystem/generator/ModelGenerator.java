@@ -1,7 +1,7 @@
-package com.mkazm.CemeteriesManagementSystem.generator;
+package com.mkazm.cemeteriesmanagementsystem.generator;
 
 import com.github.javafaker.Faker;
-import com.mkazm.CemeteriesManagementSystem.model.*;
+import com.mkazm.cemeteriesmanagementsystem.model.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
@@ -15,13 +15,13 @@ public class ModelGenerator {
   private static final int MAX_PAYMENTS_FOR_USER_AND_RESERVATION = 10;
   private static final int MAX_DECEASEDS_FOR_PLOT = 4;
   private static final int MAX_DECEASEDS_FOR_BURIAL = 3;
-  private static final int MAX_EXHUMATIONS_FOR_MANAGER = 20;
-  private static final int MAX_PLOTS_IN_SECTOR = 50;
+  private static final int MAX_EXHUMATIONS_FOR_MANAGER = 10;
+  private static final int MAX_PLOTS_IN_SECTOR = 30;
   private static final int MAX_PLOTS_FOR_RESERVATION = 5;
-  private static final int MAX_RESERVATIONS_FOR_USER = 20;
+  private static final int MAX_RESERVATIONS_FOR_USER = 10;
   private static final int MAX_SECTORS_IN_CEMETERY = 10;
   private static final int MAX_TOMBSTONES_FOR_PLOT = 3;
-  private static final int MAX_EMPLOYEES_FOR_CEMETERY = 20;
+  private static final int MAX_EMPLOYEES_FOR_CEMETERY = 10;
 
   private static final List<String> GRAVE_TYPE_NAMES =
       List.of("single", "double", "child", "family", "mass");
