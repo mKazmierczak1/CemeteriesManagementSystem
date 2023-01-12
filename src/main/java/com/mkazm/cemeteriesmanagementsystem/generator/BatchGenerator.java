@@ -1,4 +1,4 @@
-package com.mkazm.CemeteriesManagementSystem.generator;
+package com.mkazm.cemeteriesmanagementsystem.generator;
 
 public class BatchGenerator {
   private long burialIndex;

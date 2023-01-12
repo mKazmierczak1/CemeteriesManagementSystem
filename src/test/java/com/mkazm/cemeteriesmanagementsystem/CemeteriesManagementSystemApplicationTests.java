@@ -1,4 +1,4 @@
-package com.mkazm.CemeteriesManagementSystem;
+package com.mkazm.cemeteriesmanagementsystem;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

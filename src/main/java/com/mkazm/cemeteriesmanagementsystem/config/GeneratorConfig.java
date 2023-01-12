@@ -1,7 +1,7 @@
-package com.mkazm.CemeteriesManagementSystem.config;
+package com.mkazm.cemeteriesmanagementsystem.config;
 
-import com.mkazm.CemeteriesManagementSystem.generator.ModelGenerator;
-import com.mkazm.CemeteriesManagementSystem.generator.QueryGenerator;
+import com.mkazm.cemeteriesmanagementsystem.generator.ModelGenerator;
+import com.mkazm.cemeteriesmanagementsystem.generator.QueryGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

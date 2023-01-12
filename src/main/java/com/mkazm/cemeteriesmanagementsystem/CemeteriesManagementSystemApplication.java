@@ -1,4 +1,4 @@
-package com.mkazm.CemeteriesManagementSystem;
+package com.mkazm.cemeteriesmanagementsystem;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

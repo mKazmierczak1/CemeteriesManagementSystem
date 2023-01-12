@@ -1,4 +1,4 @@
-package com.mkazm.CemeteriesManagementSystem.model;
+package com.mkazm.cemeteriesmanagementsystem.model;
 
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;

@@ -1,6 +1,6 @@
-package com.mkazm.CemeteriesManagementSystem.repository;
+package com.mkazm.cemeteriesmanagementsystem.repository;
 
-import com.mkazm.CemeteriesManagementSystem.model.Reservation;
+import com.mkazm.cemeteriesmanagementsystem.model.Reservation;
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 
 public interface ReservationRepository extends Neo4jRepository<Reservation, Long> {}

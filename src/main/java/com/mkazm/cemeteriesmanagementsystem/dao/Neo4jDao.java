@@ -1,4 +1,4 @@
-package com.mkazm.CemeteriesManagementSystem.dao;
+package com.mkazm.cemeteriesmanagementsystem.dao;
 
 import lombok.RequiredArgsConstructor;
 import org.neo4j.driver.Driver;

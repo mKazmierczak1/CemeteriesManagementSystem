@@ -1,18 +1,21 @@
-package com.mkazm.CemeteriesManagementSystem;
+package com.mkazm.cemeteriesmanagementsystem;
 
-import com.mkazm.CemeteriesManagementSystem.generator.ModelGenerator;
-import com.mkazm.CemeteriesManagementSystem.model.*;
-import com.mkazm.CemeteriesManagementSystem.repository.CemeteryRepository;
-import com.mkazm.CemeteriesManagementSystem.repository.UserRepository;
+import com.mkazm.cemeteriesmanagementsystem.generator.ModelGenerator;
+import com.mkazm.cemeteriesmanagementsystem.model.*;
+import com.mkazm.cemeteriesmanagementsystem.repository.CemeteryRepository;
+import com.mkazm.cemeteriesmanagementsystem.repository.UserRepository;
 import java.util.Collection;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class InitRunner implements ApplicationRunner {
@@ -22,29 +25,39 @@ public class InitRunner implements ApplicationRunner {
   private final UserRepository userRepository;
   private final Random random = new Random();
 
-  private static final int MAX_USERS = 100;
+  private static final int ITERATIONS_NUMBER = 1;
+  private static final int MAX_USERS = 5;
 
   @Override
-  public void run(ApplicationArguments args) {
-    var cemetery = modelGenerator.generateCemetery();
-    var users = modelGenerator.generateEntities(MAX_USERS, modelGenerator::generateUser);
-    var reservations = getAllReservations(users);
-    var payments = getAllPayments(users, reservations);
+  public void run(ApplicationArguments args) throws InterruptedException {
+    for (int i = 1; i <= ITERATIONS_NUMBER; i++) {
+      var cemetery = modelGenerator.generateCemetery();
+      var users = modelGenerator.generateEntities(MAX_USERS, modelGenerator::generateUser);
+      var reservations = getAllReservations(users);
+      var payments = getAllPayments(users, reservations);
 
-    addPlotsFromReservationsToCemetery(reservations, cemetery);
+      addPlotsFromReservationsToCemetery(reservations, cemetery);
 
-    var plots = getAllPlots(cemetery);
+      var plots = getAllPlots(cemetery);
 
-    addBuriedToPlots(getAllBuried(payments, reservations), plots);
-    addDeceasedsToExhumations(getAllDeceaseds(plots), cemetery.manager().getExhumations());
-    addTombstonesToPayments(payments, plots);
+      addBuriedToPlots(getAllBuried(payments, reservations), plots);
+      addDeceasedsToExhumations(getAllDeceaseds(plots), cemetery.manager().getExhumations());
+      addTombstonesToPayments(payments, plots);
 
-    System.out.println("Started inserting");
+      log.info("Started inserting. Iteration: {}", i);
 
-    cemeteryRepository.save(cemetery);
-    userRepository.saveAll(users);
+      var queryResult = CompletableFuture.runAsync(() -> {
+        cemeteryRepository.save(cemetery);
+        userRepository.saveAll(users);
+      });
 
-    System.out.println("Insert completed!");
+      while (!queryResult.isDone()) {
+        log.info("Still inserting data...");
+        Thread.sleep(5000);
+      }
+
+      log.info("Insert completed!");
+    }
   }
 
   private List<Reservation> getAllReservations(Collection<User> users) {
