@@ -12,14 +12,20 @@ import org.springframework.data.neo4j.core.schema.Relationship;
 @AllArgsConstructor
 public class User {
   @Id long id;
-  private String first_name;
-  private String last_name;
+  private String firstName;
+  private String lastName;
   private String city;
   private String street;
   private String number;
   private String email;
-  private String phone_number;
+  private String phoneNumber;
 
   @Relationship(type = "RESERVED_BY", direction = Relationship.Direction.INCOMING)
   List<Reservation> reservations;
+
+  @Relationship(type = "COMMISSIONED_BY", direction = Relationship.Direction.INCOMING)
+  List<Burial> burials;
+
+  @Relationship(type = "PAID_BY", direction = Relationship.Direction.INCOMING)
+  List<Payment> payments;
 }

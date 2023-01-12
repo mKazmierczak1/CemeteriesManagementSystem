@@ -1,9 +1,10 @@
 package com.mkazm.CemeteriesManagementSystem.model;
 
+import java.time.Instant;
+import java.util.List;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
-
-import java.time.Instant;
+import org.springframework.data.neo4j.core.schema.Relationship;
 
 @Node("Deceased")
 public record Deceased(
@@ -12,4 +13,6 @@ public record Deceased(
     String last_name,
     String pesel,
     Instant birth_date,
-    Instant death_date) {}
+    Instant death_date,
+    @Relationship(type = "EXECUTED_ON", direction = Relationship.Direction.INCOMING)
+        List<Exhumation> exhumations) {}

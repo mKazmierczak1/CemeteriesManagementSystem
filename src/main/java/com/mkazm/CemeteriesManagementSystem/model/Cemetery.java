@@ -14,7 +14,9 @@ public record Cemetery(
     String number,
     @Relationship(type = "BELONGS_TO", direction = Relationship.Direction.INCOMING)
         List<Sector> sectors,
-    @Relationship(type = "MANAGES", direction = Relationship.Direction.INCOMING) Manager manager) {
+    @Relationship(type = "MANAGES", direction = Relationship.Direction.INCOMING) Manager manager,
+    @Relationship(type = "ASSIGNED_TO", direction = Relationship.Direction.INCOMING)
+        List<Employee> employees) {
 
   public Sector getSector(int index) {
     return sectors.get(index);

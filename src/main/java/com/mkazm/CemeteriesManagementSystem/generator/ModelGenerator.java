@@ -11,24 +11,25 @@ public class ModelGenerator {
 
   private final Faker faker;
 
-  private static final int maxBurialBatchCount = 400;
-  private static final int maxCemeteryBatchCount = 1;
-  private static final int maxDeceasedBatchCount = 1000;
-  private static final int maxExhumationBatchCount = 100;
+  private static final int MAX_BURIALS_FOR_RESERVATION_AND_PAYMENT = 5;
+  private static final int MAX_PAYMENTS_FOR_USER_AND_RESERVATION = 10;
+  private static final int MAX_DECEASEDS_FOR_PLOT = 4;
+  private static final int MAX_DECEASEDS_FOR_BURIAL = 3;
+  private static final int MAX_EXHUMATIONS_FOR_MANAGER = 20;
   private static final int MAX_PLOTS_IN_SECTOR = 50;
   private static final int MAX_PLOTS_FOR_RESERVATION = 5;
-  private static final int maxReservationBatchCount = 800;
+  private static final int MAX_RESERVATIONS_FOR_USER = 20;
   private static final int MAX_SECTORS_IN_CEMETERY = 10;
-  private static final int maxTombstoneBatchCount = 800;
-  private static final int maxUserBatchCount = 200;
+  private static final int MAX_TOMBSTONES_FOR_PLOT = 3;
+  private static final int MAX_EMPLOYEES_FOR_CEMETERY = 20;
 
-  private static final List<String> grave_type_names =
+  private static final List<String> GRAVE_TYPE_NAMES =
       List.of("single", "double", "child", "family", "mass");
 
-  private static final List<String> tombstone_type_names =
+  private static final List<String> TOMBSTONE_TYPE_NAMES =
       List.of("Upright", "Slant", "Flat", "Bevel", "Bench", "Wing");
 
-  private static final List<String> user_type_names =
+  private static final List<String> USER_TYPE_NAMES =
       List.of("logged", "admin", "manager", "employee");
 
   private static final List<String> cemetery_names =
@@ -67,7 +68,8 @@ public class ModelGenerator {
         faker.date().birthday().toInstant(),
         faker.address().city(),
         faker.address().streetName(),
-        faker.address().buildingNumber());
+        faker.address().buildingNumber(),
+        generateEntities(MAX_DECEASEDS_FOR_BURIAL, this::generateDeceased));
   }
 
   public Cemetery generateCemetery() {
@@ -78,7 +80,8 @@ public class ModelGenerator {
         faker.address().streetName(),
         faker.address().buildingNumber(),
         generateEntities(faker.random().nextInt(MAX_SECTORS_IN_CEMETERY), this::generateSector),
-        new Manager(generateUser()));
+        generateManager(),
+        generateEntities(MAX_EMPLOYEES_FOR_CEMETERY, this::generateEmployee));
   }
 
   public Deceased generateDeceased() {
@@ -88,7 +91,8 @@ public class ModelGenerator {
         faker.name().lastName(),
         faker.numerify("###########"),
         faker.date().birthday().toInstant(),
-        faker.date().birthday().toInstant());
+        faker.date().birthday().toInstant(),
+        new ArrayList<>());
   }
 
   public Exhumation generateExhumation() {
@@ -115,12 +119,20 @@ public class ModelGenerator {
         faker.date().birthday().toInstant(),
         faker.address().city(),
         faker.address().streetName(),
-        faker.address().buildingNumber());
+        faker.address().buildingNumber(),
+        generateInvoice(),
+        generateBurial(),
+        generateTombstone());
   }
 
   public Plot generatePlot() {
     return new Plot(
-        faker.random().nextLong(), faker.random().nextInt(100), faker.random().nextInt(100));
+        faker.random().nextLong(),
+        faker.random().nextInt(100),
+        faker.random().nextInt(100),
+        GRAVE_TYPE_NAMES.get(faker.random().nextInt(GRAVE_TYPE_NAMES.size())),
+        generateEntities(MAX_DECEASEDS_FOR_PLOT, this::generateDeceased),
+        generateEntities(MAX_TOMBSTONES_FOR_PLOT, this::generateTombstone));
   }
 
   public Reservation generateReservation() {
@@ -130,7 +142,9 @@ public class ModelGenerator {
         faker.address().city(),
         faker.address().streetName(),
         faker.address().buildingNumber(),
-        generateEntities(MAX_PLOTS_FOR_RESERVATION, this::generatePlot));
+        generateEntities(MAX_PLOTS_FOR_RESERVATION, this::generatePlot),
+        generateEntities(MAX_PAYMENTS_FOR_USER_AND_RESERVATION, this::generatePayment),
+        generateEntities(MAX_BURIALS_FOR_RESERVATION_AND_PAYMENT, this::generateBurial));
   }
 
   public Sector generateSector() {
@@ -142,7 +156,8 @@ public class ModelGenerator {
 
   public Tombstone generateTombstone() {
     return new Tombstone(
-        faker.random().nextLong());
+        faker.random().nextLong(),
+        TOMBSTONE_TYPE_NAMES.get(faker.random().nextInt(TOMBSTONE_TYPE_NAMES.size())));
   }
 
   public User generateUser() {
@@ -155,12 +170,24 @@ public class ModelGenerator {
         faker.address().buildingNumber(),
         faker.bothify("??????###@mail.com"),
         faker.phoneNumber().phoneNumber(),
-        List.of());
+        generateEntities(MAX_RESERVATIONS_FOR_USER, this::generateReservation),
+        generateEntities(MAX_BURIALS_FOR_RESERVATION_AND_PAYMENT, this::generateBurial),
+        generateEntities(MAX_PAYMENTS_FOR_USER_AND_RESERVATION, this::generatePayment));
+  }
+
+  public Manager generateManager() {
+    return new Manager(
+        generateUser(), generateEntities(MAX_EXHUMATIONS_FOR_MANAGER, this::generateExhumation));
+  }
+
+  public Employee generateEmployee() {
+    return new Employee(generateUser());
   }
 
   public <T> List<T> generateEntities(int numberOfEntities, Supplier<T> generateMethod) {
     var entities = new ArrayList<T>();
-    IntStream.range(0, numberOfEntities).forEach(i -> entities.add(generateMethod.get()));
+    IntStream.range(faker.random().nextInt(numberOfEntities), numberOfEntities)
+        .forEach(i -> entities.add(generateMethod.get()));
 
     return entities;
   }

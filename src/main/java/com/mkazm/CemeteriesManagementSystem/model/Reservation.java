@@ -13,4 +13,7 @@ public record Reservation(
     String city,
     String street,
     String number,
-    @Relationship(type = "IS_FOR", direction = Relationship.Direction.OUTGOING) List<Plot> plots) {}
+    @Relationship(type = "IS_FOR", direction = Relationship.Direction.OUTGOING) List<Plot> plots,
+    @Relationship(type = "PAYMENT_FOR", direction = Relationship.Direction.INCOMING)
+        List<Payment> payments,
+    @Relationship(type = "", direction = Relationship.Direction.INCOMING) List<Burial> burials) {}
