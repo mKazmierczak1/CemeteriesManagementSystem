@@ -186,7 +186,7 @@ public class ModelGenerator {
 
   public <T> List<T> generateEntities(int numberOfEntities, Supplier<T> generateMethod) {
     var entities = new ArrayList<T>();
-    IntStream.range(faker.random().nextInt(numberOfEntities), numberOfEntities)
+    IntStream.range(faker.random().nextInt(numberOfEntities == 0 ? 1 : numberOfEntities), numberOfEntities)
         .forEach(i -> entities.add(generateMethod.get()));
 
     return entities;

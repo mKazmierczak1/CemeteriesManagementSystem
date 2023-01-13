@@ -118,6 +118,6 @@ public class InitRunner implements ApplicationRunner {
   }
 
   private <T> T getRandomElement(List<T> elements) {
-    return elements.get(random.nextInt(elements.size() - 1));
+    return elements.get(random.nextInt(elements.isEmpty() ? 1 : elements.size()));
   }
 }
